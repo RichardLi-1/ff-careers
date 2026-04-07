@@ -1,7 +1,24 @@
 {
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit",
-    "source.organizeImports": "explicit",
-    "source.sortMembers": "explicit"
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.profiles.osx": {
+    "zsh": {
+      "path": "/bin/zsh",
+      "args": [
+        "-l"
+      ]
+    },
+    "bash": {
+      "path": "/bin/bash",
+      "args": [
+        "--noprofile",
+        "--norc"
+      ]
+    }
+  },
+  "terminal.integrated.automationProfile.osx": {
+    "path": "/bin/zsh",
+    "args": [
+      "-l"
+    ]
   }
 }
