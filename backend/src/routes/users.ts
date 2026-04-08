@@ -1,24 +1,10 @@
 import app from '../app'
+import { getAllUsersController, getUserByIdController, updateUserByIdController, deleteUserByIdController } from '../controllers/users'
 
-app.get('/', (req, res) => {
-    res.send("get")
-})
+app.get('/users', getAllUsersController) //ADMIN ONLY
 
+app.get('/users/:id', getUserByIdController) //ADMIN OR USER THEMSELVES
 
-//users
+app.patch('/users/:id', updateUserByIdController) //ADMIN OR USER THEMSELVES
 
-app.get('/users', (req, res) => { //ADMIN ONLY
-    res.send("get all users")
-})
-
-app.get('/users/:id', (req, res) => {
-    res.send("get user info by id")
-})
-
-app.patch('/users/:id', (req, res) => {
-    res.send("update user info by id")
-})
-
-app.delete('/users/:id', (req, res) => { //mark account inactive, or deactivate. IDs should match Firebase UID
-    res.send("delete user by id")
-})
+app.delete('/users/:id', deleteUserByIdController) //mark account inactive, or deactivate. IDs should match Firebase UID

@@ -41,4 +41,9 @@ app.get('/health', async (req, res) => {
 })
 
 
+app.get('/', (req, res) => {
+    res.send("get")
+})
+
+
 export default app;
