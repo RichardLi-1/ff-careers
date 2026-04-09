@@ -51,3 +51,22 @@ export const Fonts = Platform.select({
     mono: "SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
   },
 });
+
+export const AppFonts = {
+  regular: 'Glacial Indifference',
+  bold: 'Glacial Indifference Bold',
+} as const;
+
+export const AppColors = {
+  background: '#f5f6f8',
+  surface: '#ffffff',
+  surfaceMuted: '#f7f7f7',
+  accentSoft: '#efeafc',
+  accentBorder: '#d4aaff',
+  textPrimary: '#111111',
+  textSecondary: '#333333',
+  textMuted: '#aaaaaa',
+  success: '#27ae60',
+  overlay: 'rgba(0, 0, 0, 0.5)',
+  shadow: '#000000',
+} as const;

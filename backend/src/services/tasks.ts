@@ -1,4 +1,3 @@
-import app from '../app';
 import pool from '../db'
 
 export async function getAllTasksByUserId(id: string){
@@ -14,7 +13,7 @@ export async function getAllTasksByUserId(id: string){
 
 export async function createTask(id: string, taskData: any){
     try {
-        const res = await pool.query("INSERT INTO tasks (user_id, title, description, status, created_at) VALUES ($1, $2, $3, NOW())", [taskData.title, taskData.description, taskData.status, taskData.created_at]);
+        const res = await pool.query("INSERT INTO tasks (user_id, title, description, status, created_at) VALUES ($1, $2, $3, NOW())", [id, taskData.title, taskData.description, taskData.status, taskData.created_at]);
         return res.rowCount === 1;
     }
     catch (err) {
