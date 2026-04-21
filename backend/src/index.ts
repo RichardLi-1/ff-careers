@@ -1,4 +1,6 @@
 import app from './app';
+import './routes/tasks';
+import './routes/users';
 //rest apis—what things exist in my system?
 //users
 //jobs

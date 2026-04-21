@@ -1,9 +1,11 @@
 //create express app, middleware, routes
 
 import express, { Express } from 'express';
+import cors from 'cors';
 import 'dotenv/config';
 
-const app: Express = express(); //app is an Express application object
+const app: Express = express();
+app.use(cors({ origin: 'http://localhost:8081' }));
 app.use(express.json());
 
 const { Pool } = require('pg');

@@ -1,6 +1,6 @@
 import app from '../app'
 
-import { getAllTasksByUserId, createTask, updateTaskById, deleteTaskById} from '../services/tasks'
+import { getAllTasksByUserId, createTask, updateTaskById, deleteTaskById, createTaskRating} from '../services/tasks'
 
 export async function getMyTasksController(req: any, res: any) {
     try {
@@ -25,11 +25,12 @@ export async function getAllTasksByUserIdController(req: any, res: any) {
 }
 
 export async function createTaskController(req: any, res: any) {
-    const userId = req.params.id;
+    const userId = req.user.uid;
+    if (!userId) return res.status(401).json({ error: 'Unauthorized' });
     try {
-        const success = await createTask(userId, req.body);
+        const success = await createTask(userId, req.body.title, req.body.description);
         if(success){
-            res.status(200).json({ message: 'Task created successfully' });
+            res.status(200).json(success);
         }
         else {
             res.status(500).json({ error: 'Internal server error' });
@@ -60,6 +61,21 @@ export async function deleteTaskByIdController(req: any, res: any) {
         const success = await deleteTaskById(req.params.id);
         if (success){
             res.status(200).json({ message: 'Task deleted successfully' });
+        }
+        else {
+            res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+    catch {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+export async function createTaskRatingController(req: any, res: any) {
+    try {
+        const success = await createTaskRating(req.params.id, req.body.question, req.body.rating, req.body.review_response);
+        if (success){
+            res.status(200).json({ message: 'Task rating created successfully' });
         }
         else {
             res.status(500).json({ error: 'Internal server error' });

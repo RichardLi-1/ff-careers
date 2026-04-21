@@ -40,6 +40,19 @@ export async function getUserById(id: string) {
     }
 }
 
+export async function upsertUser(firebase_uid: string, name: string, email: string) {
+    try{
+        const res = await pool.query('INSERT INTO users (firebase_uid, name, email) VALUES ($1, $2, $3) ON CONFLICT (firebase_uid) DO NOTHING', [firebase_uid, name, email]);
+        console.log('User upserted successfully');
+        return res.rowCount ? res.rowCount > 0 : false;
+    }
+    catch (err) {
+        if (err instanceof Error) { console.error('Error executing query', err.stack); }
+        else { console.error('Error executing query', err); }
+        return false;
+    }
+}
+
 export async function updateUserById(id: string, userData: any) {
     try {
         const res = await pool.query('UPDATE users SET name = $1, email = $2 WHERE id = $3', [userData.name, userData.email, id]);

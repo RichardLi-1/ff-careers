@@ -1,7 +1,10 @@
 import { BlurView } from 'expo-blur';
 import { usePathname, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/services/firebase';
+import { useAuth } from '@/hooks/use-auth';
 import { AppColors, AppFonts } from '@/constants/theme';
 
 const TABS = [
@@ -13,7 +16,15 @@ const TABS = [
 export default function AppHeader() {
   const router = useRouter();
   const pathname = usePathname();
+  const { user } = useAuth();
   const [showSettings, setShowSettings] = useState(false);
+  const { width } = useWindowDimensions();
+  const isMobile = width < 600;
+
+  async function handleLogout() {
+    await signOut(auth);
+    router.replace('/login');
+  }
 
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
@@ -25,6 +36,10 @@ export default function AppHeader() {
   const isActive = (path: string) =>
     path === '/' ? pathname === '/' || pathname === '/index' : pathname === path;
 
+  const initials = user?.displayName
+    ? user.displayName.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
+    : (user?.email?.[0] ?? '?').toUpperCase();
+
   const inner = (
     <View style={styles.row}>
       <View style={styles.left}>
@@ -33,33 +48,47 @@ export default function AppHeader() {
         </View>
         <View>
           <Text style={styles.greeting}>{greeting}</Text>
-          <Text style={styles.name}>Loading...</Text>
+          <Text style={styles.name}>{user?.displayName ?? user?.email ?? 'Loading...'}</Text>
         </View>
       </View>
 
-      <View style={styles.navRow}>
-        {TABS.map((tab) => (
-          <Pressable key={tab.path} onPress={() => router.navigate(tab.path as any)} style={styles.navButton}>
-            <Text style={[styles.navText, isActive(tab.path) && styles.navTextActive]}>
-              {tab.label}
-            </Text>
-            {isActive(tab.path) && <View style={styles.indicator} />}
-          </Pressable>
-        ))}
-      </View>
-
-      <View style={styles.settingsWrap}>
-        <Pressable onPress={() => setShowSettings((v) => !v)} style={styles.settingsButton}>
-          <Text style={styles.settingsIcon}>⚙</Text>
-        </Pressable>
-        {showSettings && (
-          <View style={styles.settingsMenu}>
-            <Pressable style={styles.menuItem}>
-              <Text style={styles.menuItemText}>Log Out</Text>
+      {!isMobile && (
+        <View style={styles.navRow}>
+          {TABS.map((tab) => (
+            <Pressable key={tab.path} onPress={() => router.navigate(tab.path as any)} style={styles.navButton}>
+              <Text style={[styles.navText, isActive(tab.path) && styles.navTextActive]}>
+                {tab.label}
+              </Text>
+              {isActive(tab.path) && <View style={styles.indicator} />}
             </Pressable>
-          </View>
-        )}
-      </View>
+          ))}
+        </View>
+      )}
+
+      {!isMobile && (
+        <View style={styles.settingsWrap}>
+          <Pressable onPress={() => setShowSettings((v) => !v)} style={styles.settingsButton}>
+            <Text style={styles.settingsIcon}>⚙</Text>
+          </Pressable>
+          {showSettings && (
+            <View style={styles.settingsMenu}>
+              <View style={styles.popupProfile}>
+                <View style={styles.popupAvatar}>
+                  <Text style={styles.popupAvatarText}>{initials}</Text>
+                </View>
+                <View style={styles.popupInfo}>
+                  <Text style={styles.popupName}>{user?.displayName ?? 'Profile'}</Text>
+                  <Text style={styles.popupEmail}>{user?.email ?? ''}</Text>
+                </View>
+              </View>
+              <View style={styles.divider} />
+              <Pressable style={styles.menuItem} onPress={handleLogout}>
+                <Text style={styles.menuItemText}>Log Out</Text>
+              </Pressable>
+            </View>
+          )}
+        </View>
+      )}
     </View>
   );
 
@@ -153,6 +182,7 @@ const styles = StyleSheet.create({
   settingsWrap: {
     position: 'relative',
     flexShrink: 0,
+    marginLeft: 'auto',
   },
   settingsButton: {
     padding: 4,
@@ -166,18 +196,58 @@ const styles = StyleSheet.create({
     top: 36,
     right: 0,
     backgroundColor: AppColors.surface,
-    borderRadius: 10,
+    borderRadius: 14,
     shadowColor: AppColors.shadow,
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 8,
     padding: 8,
-    minWidth: 120,
+    minWidth: 200,
     zIndex: 100,
+  },
+  popupProfile: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+  },
+  popupAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: AppColors.accentSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  popupAvatarText: {
+    fontSize: 15,
+    fontFamily: AppFonts.bold,
+    color: AppColors.textSecondary,
+  },
+  popupInfo: {
+    flex: 1,
+  },
+  popupName: {
+    fontSize: 15,
+    fontFamily: AppFonts.bold,
+    color: AppColors.textPrimary,
+  },
+  popupEmail: {
+    fontSize: 13,
+    fontFamily: AppFonts.regular,
+    color: AppColors.textMuted,
+  },
+  divider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: AppColors.accentBorder,
+    marginVertical: 4,
+    marginHorizontal: 8,
   },
   menuItem: {
     padding: 10,
+    borderRadius: 8,
   },
   menuItemText: {
     fontSize: 15,

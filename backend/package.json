@@ -1,15 +1,19 @@
 {
   "scripts": {
-    "dev": "tsx watch src/index.ts"
+    "dev": "nodemon --exec tsx src/index.ts"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^25.5.2",
     "@types/pg": "^8.20.0",
+    "nodemon": "^3.1.14",
+    "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"
   },
   "dependencies": {
+    "@types/cors": "^2.8.19",
+    "cors": "^2.8.6",
     "express": "^5.2.1",
     "firebase-admin": "^13.7.0",
     "pg": "^8.20.0"

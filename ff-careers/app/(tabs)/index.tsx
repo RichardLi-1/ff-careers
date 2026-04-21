@@ -1,84 +1,172 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
+  Animated,
+  LayoutAnimation,
   Modal,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
+  UIManager,
+  useWindowDimensions,
   View,
 } from 'react-native';
+
+if (Platform.OS === 'android') {
+  UIManager.setLayoutAnimationEnabledExperimental?.(true);
+}
 import AppHeader from '@/components/AppHeader';
 import { AppColors, AppFonts } from '@/constants/theme';
+import { useTasks } from '@/hooks/use-tasks';
 
 const LISTS = ['To Do', 'List 2'];
 
-const INITIAL_TASKS = [
+/*const INITIAL_TASKS = [
   { id: '1', title: 'Review weekly goals', completed: false },
   { id: '2', title: 'Update resume bullet points', completed: true },
   { id: '3', title: 'Apply to one internship', completed: false },
-];
+];*/
 
 export default function TodoScreen() {
   const [selectedList, setSelectedList] = useState(0);
-  const [tasks, setTasks] = useState(INITIAL_TASKS);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [showCompleted, setShowCompleted] = useState(false);
+  const chevronAnim = useRef(new Animated.Value(0)).current;
+  const { tasks, loading, error, toggleTask, addTask } = useTasks();
+  const { width } = useWindowDimensions();
+  const isMobile = width < 600;
 
-  const toggleTask = (taskId: string) => {
-    setTasks((currentTasks) =>
-      currentTasks.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task
-      )
-    );
-    setShowRatingModal(true);
-  };
+  const activeTasks = tasks.filter(t => t.status !== 'done');
+  const completedTasks = tasks.filter(t => t.status === 'done');
+
+  function handleToggleTask(id: number) {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    toggleTask(id);
+  }
+
+  function handleToggleCompleted() {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    Animated.timing(chevronAnim, {
+      toValue: showCompleted ? 0 : 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+    setShowCompleted(v => !v);
+  }
+
+  function handleAddTask() {
+    if (!newTaskTitle.trim()) return;
+    setNewTaskTitle('');
+    setShowAddModal(false);
+    addTask(newTaskTitle);
+  }
+
+  const chevronRotate = chevronAnim.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '180deg'] });
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <AppHeader />
       <View style={styles.screen}>
 
-        <View style={styles.appContainer}>
-          <View style={styles.sidebar}>
-            {LISTS.map((listName, index) => (
-              <Pressable
-                key={listName}
-                onPress={() => setSelectedList(index)}
-                style={[
-                  styles.listButton,
-                  index === selectedList ? styles.listButtonActive : null,
-                ]}>
-                <Text style={styles.listButtonText}>{listName}</Text>
+        <View style={[styles.appContainer, isMobile && styles.appContainerMobile]}>
+          {isMobile ? (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chipBar} contentContainerStyle={styles.chipBarContent}>
+              {LISTS.map((listName, index) => (
+                <Pressable
+                  key={listName}
+                  onPress={() => setSelectedList(index)}
+                  style={[styles.chip, index === selectedList && styles.chipActive]}>
+                  <Text style={[styles.chipText, index === selectedList && styles.chipTextActive]}>{listName}</Text>
+                </Pressable>
+              ))}
+              <Pressable style={styles.chip}>
+                <Text style={styles.chipText}>+ Add a List</Text>
               </Pressable>
-            ))}
-            <Pressable style={styles.addListButton}>
-              <Text style={styles.addListText}>+ Add a List</Text>
-            </Pressable>
-          </View>
+            </ScrollView>
+          ) : (
+            <View style={styles.sidebar}>
+              {LISTS.map((listName, index) => (
+                <Pressable
+                  key={listName}
+                  onPress={() => setSelectedList(index)}
+                  style={[
+                    styles.listButton,
+                    index === selectedList ? styles.listButtonActive : null,
+                  ]}>
+                  <Text style={styles.listButtonText}>{listName}</Text>
+                </Pressable>
+              ))}
+              <Pressable style={styles.addListButton}>
+                <Text style={styles.addListText}>+ Add a List</Text>
+              </Pressable>
+            </View>
+          )}
 
-          <View style={styles.taskContainer}>
+          <View style={[styles.taskContainer, isMobile && styles.taskContainerMobile]}>
             <Text style={styles.sectionTitle}>{LISTS[selectedList]}</Text>
 
             <ScrollView
               contentContainerStyle={styles.taskList}
               showsVerticalScrollIndicator={false}>
-              {tasks.map((task) => (
-                <Pressable key={task.id} style={styles.task} onPress={() => toggleTask(task.id)}>
-                  <Text style={[styles.circle, task.completed ? styles.circleComplete : null]}>
-                    {task.completed ? '●' : '○'}
-                  </Text>
-                  <Text style={[styles.taskTitle, task.completed ? styles.taskTitleComplete : null]}>
-                    {task.title}
-                  </Text>
-                </Pressable>
-              ))}
+              {loading ? (
+                <Text style={styles.stateText}>Loading tasks...</Text>
+              ) : error ? (
+                <Text style={styles.stateTextError}>Couldn't load tasks. Check your connection and try again.</Text>
+              ) : tasks.length === 0 ? (
+                <Text style={styles.stateText}>No tasks yet — add one below.</Text>
+              ) : (
+                <>
+                  {activeTasks.map((task) => (
+                    <Pressable key={task.id} style={styles.task} onPress={() => { handleToggleTask(task.id); setShowRatingModal(true); }}>
+                      <Text style={styles.circle}>○</Text>
+                      <Text style={styles.taskTitle}>{task.title}</Text>
+                    </Pressable>
+                  ))}
+
+                  {completedTasks.length > 0 && (
+                    <>
+                      <Pressable style={styles.completedHeader} onPress={handleToggleCompleted}>
+                        <Animated.Text style={[styles.completedChevron, { transform: [{ rotate: chevronRotate }] }]}>›</Animated.Text>
+                        <Text style={styles.completedHeaderText}>Completed ({completedTasks.length})</Text>
+                      </Pressable>
+                      {showCompleted && completedTasks.map((task) => (
+                        <Pressable key={task.id} style={styles.task} onPress={() => handleToggleTask(task.id)}>
+                          <Text style={[styles.circle, styles.circleComplete]}>●</Text>
+                          <Text style={[styles.taskTitle, styles.taskTitleComplete]}>{task.title}</Text>
+                        </Pressable>
+                      ))}
+                    </>
+                  )}
+                </>
+              )}
             </ScrollView>
 
-            <Pressable style={styles.addTaskButton}>
-              <Text style={styles.circle}>+</Text>
-              <Text style={styles.addTaskText}>Add a task</Text>
-            </Pressable>
+            {showAddModal ? (
+              <View style={styles.addTaskButton}>
+                <TextInput
+                  style={styles.addTaskInput}
+                  placeholder="Task title"
+                  placeholderTextColor={AppColors.textMuted}
+                  value={newTaskTitle}
+                  onChangeText={setNewTaskTitle}
+                  onSubmitEditing={handleAddTask}
+                  onBlur={() => { setShowAddModal(false); setNewTaskTitle(''); }}
+                  autoFocus
+                  returnKeyType="done"
+                />
+              </View>
+            ) : (
+              <Pressable style={styles.addTaskButton} onPress={() => setShowAddModal(true)}>
+                <Text style={styles.circle}>+</Text>
+                <Text style={styles.addTaskText}>Add a task</Text>
+              </Pressable>
+            )}
           </View>
         </View>
       </View>
@@ -106,6 +194,7 @@ export default function TodoScreen() {
           </View>
         </View>
       </Modal>
+
     </SafeAreaView>
   );
 }
@@ -227,6 +316,22 @@ appContainer: {
     textAlign: 'left',
     fontFamily: AppFonts.regular,
   },
+  completedHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    gap: 6,
+  },
+  completedChevron: {
+    fontSize: 20,
+    color: AppColors.textMuted,
+    fontFamily: AppFonts.regular,
+  },
+  completedHeaderText: {
+    fontSize: 16,
+    color: AppColors.textMuted,
+    fontFamily: AppFonts.regular,
+  },
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
@@ -277,5 +382,96 @@ appContainer: {
     fontSize: 16,
     color: AppColors.textSecondary,
     fontFamily: AppFonts.regular,
+  },
+  stateText: {
+    color: AppColors.textMuted,
+    fontSize: 16,
+    fontFamily: AppFonts.regular,
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  stateTextError: {
+    color: '#e74c3c',
+    fontSize: 16,
+    fontFamily: AppFonts.regular,
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  modalInput: {
+    width: '100%',
+    backgroundColor: AppColors.surfaceMuted,
+    borderRadius: 10,
+    padding: 12,
+    fontSize: 16,
+    fontFamily: AppFonts.regular,
+    color: AppColors.textPrimary,
+    borderWidth: 1,
+    borderColor: AppColors.accentBorder,
+    marginTop: 12,
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 16,
+  },
+  cancelButton: {
+    flex: 1,
+    backgroundColor: AppColors.accentSoft,
+    borderRadius: 8,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  cancelButtonText: {
+    fontSize: 16,
+    color: AppColors.textSecondary,
+    fontFamily: AppFonts.regular,
+  },
+  addTaskInput: {
+    flex: 1,
+    fontSize: 18,
+    fontFamily: AppFonts.regular,
+    color: AppColors.textSecondary,
+  },
+  appContainerMobile: {
+    flexDirection: 'column',
+    paddingHorizontal: 12,
+    paddingTop: 12,
+    paddingBottom: 16,
+  },
+  chipBar: {
+    flexShrink: 0,
+    marginBottom: 12,
+  },
+  chipBarContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+  },
+  chip: {
+    backgroundColor: AppColors.accentSoft,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    alignSelf: 'flex-start',
+  },
+  chipActive: {
+    backgroundColor: AppColors.surface,
+    borderWidth: 2,
+    borderColor: AppColors.accentBorder,
+  },
+  chipText: {
+    fontSize: 15,
+    color: AppColors.textSecondary,
+    fontFamily: AppFonts.regular,
+  },
+  chipTextActive: {
+    color: AppColors.textPrimary,
+    fontFamily: AppFonts.bold,
+  },
+  taskContainerMobile: {
+    borderRadius: 15,
+    flex: 1,
   },
 });
