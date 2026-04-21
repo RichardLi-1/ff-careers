@@ -1,4 +1,6 @@
 import { SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
+import AppHeader from '@/components/AppHeader';
+import { AppColors, AppFonts } from '@/constants/theme';
 
 const RESOURCES = [
   {
@@ -18,6 +20,7 @@ const RESOURCES = [
 export default function LibraryScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
+      <AppHeader />
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.eyebrow}>Career Library</Text>
         <Text style={styles.title}>Resources to keep your search moving</Text>
@@ -41,30 +44,30 @@ export default function LibraryScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f6f8',
+    backgroundColor: AppColors.background,
   },
   container: {
     padding: 24,
     gap: 14,
   },
   eyebrow: {
-    color: '#333333',
+    color: AppColors.textSecondary,
     fontSize: 12,
     letterSpacing: 1,
     textTransform: 'uppercase',
-    fontFamily: 'Glacial Indifference Bold',
+    fontFamily: AppFonts.bold,
   },
   title: {
-    color: '#111111',
+    color: AppColors.textPrimary,
     fontSize: 30,
-    fontFamily: 'Glacial Indifference Bold',
+    fontFamily: AppFonts.bold,
   },
   description: {
-    color: '#333333',
+    color: AppColors.textSecondary,
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 8,
-    fontFamily: 'Glacial Indifference',
+    fontFamily: AppFonts.regular,
   },
   cardList: {
     gap: 12,
@@ -72,23 +75,23 @@ const styles = StyleSheet.create({
   card: {
     padding: 20,
     borderRadius: 20,
-    backgroundColor: '#ffffff',
-    shadowColor: '#000000',
+    backgroundColor: AppColors.surface,
+    shadowColor: AppColors.shadow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 3,
   },
   cardTitle: {
-    color: '#111111',
+    color: AppColors.textPrimary,
     fontSize: 20,
     marginBottom: 6,
-    fontFamily: 'Glacial Indifference Bold',
+    fontFamily: AppFonts.bold,
   },
   cardDescription: {
-    color: '#333333',
+    color: AppColors.textSecondary,
     fontSize: 15,
     lineHeight: 22,
-    fontFamily: 'Glacial Indifference',
+    fontFamily: AppFonts.regular,
   },
 });

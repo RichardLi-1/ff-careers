@@ -4,6 +4,7 @@ import express, { Express } from 'express';
 import 'dotenv/config';
 
 const app: Express = express(); //app is an Express application object
+app.use(express.json());
 
 const { Pool } = require('pg');
 

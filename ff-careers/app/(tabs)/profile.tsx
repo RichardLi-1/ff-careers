@@ -1,8 +1,11 @@
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import AppHeader from '@/components/AppHeader';
+import { AppColors, AppFonts } from '@/constants/theme';
 
 export default function ProfileScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
+      <AppHeader />
       <View style={styles.container}>
         <View style={styles.avatar}>
           <Text style={styles.avatarText}>RL</Text>
@@ -22,7 +25,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f6f8',
+    backgroundColor: AppColors.background,
   },
   container: {
     flex: 1,
@@ -36,51 +39,51 @@ const styles = StyleSheet.create({
     borderRadius: 44,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#efeafc',
+    backgroundColor: AppColors.accentSoft,
     marginBottom: 18,
   },
   avatarText: {
-    color: '#333333',
+    color: AppColors.textSecondary,
     fontSize: 28,
-    fontFamily: 'Glacial Indifference Bold',
+    fontFamily: AppFonts.bold,
   },
   name: {
-    color: '#111111',
+    color: AppColors.textPrimary,
     fontSize: 28,
     marginBottom: 8,
-    fontFamily: 'Glacial Indifference Bold',
+    fontFamily: AppFonts.bold,
   },
   subtitle: {
-    color: '#333333',
+    color: AppColors.textSecondary,
     fontSize: 16,
     lineHeight: 24,
     textAlign: 'center',
     marginBottom: 24,
-    fontFamily: 'Glacial Indifference',
+    fontFamily: AppFonts.regular,
   },
   infoCard: {
     width: '100%',
     maxWidth: 360,
     padding: 20,
     borderRadius: 20,
-    backgroundColor: '#ffffff',
-    shadowColor: '#000000',
+    backgroundColor: AppColors.surface,
+    shadowColor: AppColors.shadow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 10,
     elevation: 3,
   },
   infoLabel: {
-    color: '#333333',
+    color: AppColors.textSecondary,
     fontSize: 12,
     textTransform: 'uppercase',
     letterSpacing: 1,
     marginBottom: 6,
-    fontFamily: 'Glacial Indifference Bold',
+    fontFamily: AppFonts.bold,
   },
   infoValue: {
-    color: '#111111',
+    color: AppColors.textPrimary,
     fontSize: 18,
-    fontFamily: 'Glacial Indifference',
+    fontFamily: AppFonts.regular,
   },
 });

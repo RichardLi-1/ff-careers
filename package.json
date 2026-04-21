@@ -1,0 +1,14 @@
+{
+    "name": "ff-careers-root",
+    "private": true,
+    "scripts":{
+        "backend": "npm --prefix backend run dev",
+        "app": "npm --prefix ff-careers run start",
+        "ios": "npm --prefix ff-careers run ios",
+        "android": "npm --prefix ff-careers run android",
+        "web": "npm --prefix ff-careers run web",
+        "lint": "npm --prefix ff-careers run lint",
+        "install:backend": "npm --prefix backend install",
+        "install:app": "npm --prefix ff-careers install"
+    }
+}

@@ -2,6 +2,17 @@ import app from '../app'
 
 import { getAllTasksByUserId, createTask, updateTaskById, deleteTaskById} from '../services/tasks'
 
+export async function getMyTasksController(req: any, res: any) {
+    try {
+        const tasks = await getAllTasksByUserId(req.user.uid);
+        res.status(200).json(tasks);
+    }
+    catch {
+        console.log('Error getting my tasks');
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 export async function getAllTasksByUserIdController(req: any, res: any) {
     try {
         const tasks = await getAllTasksByUserId(req.params.id);

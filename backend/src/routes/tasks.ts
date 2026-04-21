@@ -1,5 +1,9 @@
 import app from '../app'
-import { getAllTasksByUserIdController, createTaskController, updateTaskByIdController, deleteTaskByIdController } from '../controllers/tasks'
+import { getMyTasksController, getAllTasksByUserIdController, createTaskController, updateTaskByIdController, deleteTaskByIdController } from '../controllers/tasks'
+
+import { requireAuth } from '../middleware/auth';
+
+app.get('/tasks/me', requireAuth, getMyTasksController);
 
 app.get('/users/:userId/:tasks', getAllTasksByUserIdController) //ADMIN ONLY
 

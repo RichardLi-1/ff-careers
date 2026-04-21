@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import {
   Modal,
   Pressable,
@@ -8,6 +8,8 @@ import {
   Text,
   View,
 } from 'react-native';
+import AppHeader from '@/components/AppHeader';
+import { AppColors, AppFonts } from '@/constants/theme';
 
 const LISTS = ['To Do', 'List 2'];
 
@@ -22,14 +24,6 @@ export default function TodoScreen() {
   const [tasks, setTasks] = useState(INITIAL_TASKS);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [selectedRating, setSelectedRating] = useState<number | null>(null);
-  const [showSettingsMenu, setShowSettingsMenu] = useState(false);
-
-  const greeting = useMemo(() => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good Morning,';
-    if (hour < 18) return 'Good Afternoon,';
-    return 'Good Evening,';
-  }, []);
 
   const toggleTask = (taskId: string) => {
     setTasks((currentTasks) =>
@@ -42,44 +36,8 @@ export default function TodoScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <AppHeader />
       <View style={styles.screen}>
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <View style={styles.logoCircle}>
-              <Text style={styles.logoText}>FF</Text>
-            </View>
-            <View style={styles.greetingContainer}>
-              <Text style={styles.greeting}>{greeting}</Text>
-              <Text style={styles.name}>Loading...</Text>
-            </View>
-          </View>
-
-          <View style={styles.navContainer}>
-            <View style={styles.navRow}>
-              <Pressable style={styles.navButton}>
-                <Text style={[styles.navText, styles.navTextActive]}>To Do</Text>
-              </Pressable>
-              <Pressable style={styles.navButton}>
-                <Text style={styles.navText}>Career Library</Text>
-              </Pressable>
-            </View>
-          </View>
-
-          <View style={styles.settingsWrap}>
-            <Pressable
-              onPress={() => setShowSettingsMenu((current) => !current)}
-              style={styles.settingsButton}>
-              <Text style={styles.settingsButtonText}>⚙</Text>
-            </Pressable>
-            {showSettingsMenu ? (
-              <View style={styles.settingsMenu}>
-                <Pressable style={styles.menuButton}>
-                  <Text style={styles.menuButtonText}>Log Out</Text>
-                </Pressable>
-              </View>
-            ) : null}
-          </View>
-        </View>
 
         <View style={styles.appContainer}>
           <View style={styles.sidebar}>
@@ -155,116 +113,13 @@ export default function TodoScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f5f6f8',
+    backgroundColor: AppColors.background,
   },
   screen: {
     flex: 1,
-    backgroundColor: '#f5f6f8',
+    backgroundColor: AppColors.background,
   },
-  header: {
-    backgroundColor: '#ffffff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    width: '100%',
-    zIndex: 10,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexShrink: 0,
-  },
-  logoCircle: {
-    height: 45,
-    width: 45,
-    borderRadius: 22.5,
-    marginRight: 10,
-    backgroundColor: '#e5e7fa',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logoText: {
-    fontSize: 16,
-    fontFamily: 'Glacial Indifference Bold',
-    color: '#333333',
-  },
-  greetingContainer: {
-    flexDirection: 'column',
-  },
-  greeting: {
-    fontSize: 18,
-    color: '#333333',
-    fontFamily: 'Glacial Indifference',
-  },
-  name: {
-    fontSize: 20,
-    color: '#111111',
-    fontFamily: 'Glacial Indifference Bold',
-  },
-  navContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  navRow: {
-    flexDirection: 'row',
-    gap: 20,
-    justifyContent: 'center',
-  },
-  navButton: {
-    backgroundColor: '#ffffff',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-  },
-  navText: {
-    fontSize: 18,
-    color: '#333333',
-    fontFamily: 'Glacial Indifference',
-  },
-  navTextActive: {
-    textDecorationLine: 'underline',
-  },
-  settingsWrap: {
-    position: 'relative',
-    marginLeft: 'auto',
-  },
-  settingsButton: {
-    backgroundColor: 'transparent',
-    borderRadius: 8,
-    padding: 4,
-  },
-  settingsButtonText: {
-    fontSize: 24,
-    color: '#333333',
-    fontFamily: 'Glacial Indifference',
-  },
-  settingsMenu: {
-    position: 'absolute',
-    top: 40,
-    right: 0,
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
-    padding: 10,
-    minWidth: 120,
-  },
-  menuButton: {
-    backgroundColor: 'transparent',
-    padding: 10,
-    width: '100%',
-  },
-  menuButtonText: {
-    textAlign: 'left',
-    fontSize: 16,
-    color: '#333333',
-    fontFamily: 'Glacial Indifference',
-  },
-  appContainer: {
+appContainer: {
     flexDirection: 'row',
     width: '100%',
     flex: 1,
@@ -280,35 +135,35 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   listButton: {
-    backgroundColor: '#efeafc',
+    backgroundColor: AppColors.accentSoft,
     padding: 12,
     borderRadius: 12,
     alignItems: 'center',
   },
   listButtonActive: {
-    backgroundColor: '#ffffff',
+    backgroundColor: AppColors.surface,
     borderWidth: 2,
-    borderColor: '#d4aaff',
+    borderColor: AppColors.accentBorder,
   },
   listButtonText: {
     fontSize: 18,
     textAlign: 'center',
-    color: '#333333',
-    fontFamily: 'Glacial Indifference Bold',
+    color: AppColors.textSecondary,
+    fontFamily: AppFonts.bold,
   },
   addListButton: {
     paddingVertical: 12,
     paddingHorizontal: 8,
   },
   addListText: {
-    color: '#aaaaaa',
+    color: AppColors.textMuted,
     fontSize: 16,
     textAlign: 'center',
-    fontFamily: 'Glacial Indifference',
+    fontFamily: AppFonts.regular,
   },
   taskContainer: {
     flexGrow: 1,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: AppColors.surfaceMuted,
     borderRadius: 15,
     padding: 20,
     flexDirection: 'column',
@@ -317,9 +172,9 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 24,
-    color: '#111111',
+    color: AppColors.textPrimary,
     marginBottom: 14,
-    fontFamily: 'Glacial Indifference Bold',
+    fontFamily: AppFonts.bold,
   },
   taskList: {
     flexGrow: 1,
@@ -330,7 +185,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    backgroundColor: '#efeafc',
+    backgroundColor: AppColors.accentSoft,
     padding: 12,
     borderRadius: 12,
     marginBottom: 10,
@@ -338,26 +193,26 @@ const styles = StyleSheet.create({
   },
   circle: {
     fontSize: 20,
-    color: '#333333',
+    color: AppColors.textSecondary,
     marginRight: 10,
-    fontFamily: 'Glacial Indifference',
+    fontFamily: AppFonts.regular,
   },
   circleComplete: {
-    color: '#27ae60',
+    color: AppColors.success,
   },
   taskTitle: {
     flexGrow: 1,
     textAlign: 'left',
-    color: '#333333',
+    color: AppColors.textSecondary,
     fontSize: 18,
-    fontFamily: 'Glacial Indifference',
+    fontFamily: AppFonts.regular,
   },
   taskTitleComplete: {
     textDecorationLine: 'line-through',
-    color: '#777777',
+    color: AppColors.textMuted,
   },
   addTaskButton: {
-    backgroundColor: '#efeafc',
+    backgroundColor: AppColors.accentSoft,
     padding: 12,
     borderRadius: 12,
     flexDirection: 'row',
@@ -368,23 +223,23 @@ const styles = StyleSheet.create({
   },
   addTaskText: {
     fontSize: 18,
-    color: '#333333',
+    color: AppColors.textSecondary,
     textAlign: 'left',
-    fontFamily: 'Glacial Indifference',
+    fontFamily: AppFonts.regular,
   },
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: AppColors.overlay,
     zIndex: 1000,
   },
   modalCard: {
-    backgroundColor: '#ffffff',
+    backgroundColor: AppColors.surface,
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
-    shadowColor: '#000000',
+    shadowColor: AppColors.shadow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 10,
@@ -393,9 +248,9 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     textAlign: 'center',
-    color: '#333333',
+    color: AppColors.textSecondary,
     fontSize: 18,
-    fontFamily: 'Glacial Indifference',
+    fontFamily: AppFonts.regular,
   },
   starRow: {
     fontSize: 30,
@@ -405,22 +260,22 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   star: {
-    color: '#cccccc',
+    color: AppColors.textMuted,
     fontSize: 30,
-    fontFamily: 'Glacial Indifference',
+    fontFamily: AppFonts.regular,
   },
   starActive: {
     color: 'gold',
   },
   submitButton: {
-    backgroundColor: '#d4aaff',
+    backgroundColor: AppColors.accentBorder,
     borderRadius: 8,
     paddingVertical: 10,
     paddingHorizontal: 15,
   },
   submitButtonText: {
     fontSize: 16,
-    color: '#333333',
-    fontFamily: 'Glacial Indifference',
+    color: AppColors.textSecondary,
+    fontFamily: AppFonts.regular,
   },
 });
