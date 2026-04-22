@@ -8,7 +8,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "export": "expo export --platform web && cp ../../FF-Careers-Web/index.html dist/index.html && cp ../../FF-Careers-Web/style.css dist/style.css && cp ../../FF-Careers-Web/ffcareersfavicon.svg dist/ffcareersfavicon.svg && cp ../../FF-Careers-Web/logo.png dist/logo.png && cp ../../FF-Careers-Web/carousel.png dist/carousel.png && cp ../../FF-Careers-Web/cec.png dist/cec.png && cp ../../FF-Careers-Web/step1.png dist/step1.png && cp ../../FF-Careers-Web/step2.png dist/step2.png && cp ../../FF-Careers-Web/step3.png dist/step3.png && cp ../../FF-Careers-Web/ai.png dist/ai.png && cp ../../FF-Careers-Web/ios.png dist/ios.png && cp ../../FF-Careers-Web/transparent.png dist/transparent.png && cp ../../FF-Careers-Web/greyedout.png dist/greyedout.png && cp ../../FF-Careers-Web/firebase.js dist/firebase.js && cp ../../FF-Careers-Web/auth.js dist/auth.js && cp -r ../../FF-Careers-Web/glacial-indifference dist/glacial-indifference"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
