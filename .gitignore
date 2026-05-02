@@ -6,3 +6,4 @@ ffcareers-key.pem
 /backend/dist/
 backend/commands.txt
 ff-careers-firebase-adminsdk-fbsvc-389dbd447c.json
+/node_modules

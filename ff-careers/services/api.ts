@@ -54,3 +54,17 @@ export async function createTask(title: string) {
     if (!res.ok) throw new Error(res.statusText);
     return res.json();
 }
+
+// TODO: wire to real backend endpoint POST /chat
+export async function sendChatMessage(message: string, context?: string): Promise<string> {
+    // Mock AI response while backend endpoint is not yet available
+    const contextLine = context ? ` about ${context}` : '';
+    const replies = [
+        `Great question${contextLine}! Based on your profile, I'd recommend focusing on building practical projects to demonstrate your skills to employers.`,
+        `That's something many candidates wonder about${contextLine}. The key is to highlight transferable skills and quantify your impact wherever possible.`,
+        `For${contextLine ? contextLine : ' careers like this'}, networking is often the highest-leverage activity. Even a few warm introductions can accelerate your search significantly.`,
+        `Your match score reflects your current profile. The fastest way to improve it is to close the top skill gaps — even a short course can shift your competitiveness meaningfully.`,
+    ];
+    await new Promise((r) => setTimeout(r, 900));
+    return replies[Math.floor(Math.random() * replies.length)];
+}

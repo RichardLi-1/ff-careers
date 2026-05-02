@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx expo *)",
+      "Read(//Users/richardli/.ssh/**)",
+      "Bash(chmod 600 ~/.ssh/config)",
+      "Bash(npm list *)",
+      "Bash(npm install *)",
+      "Bash(PGPASSWORD=jazzy123 psql -h localhost -p 5555 -U postgres -d ffcareersdb -c \"\\\\d tasks\")",
+      "Bash(PGPASSWORD=jazzy123 psql -h localhost -p 5555 -U postgres -d ffcareersdb -c \"\\\\d users\")",
+      "Read(//Users/richardli/dev/**)",
+      "Bash(mkdir -p /Users/richardli/dev/FF-Careers-Landing)",
+      "Bash(cp /Users/richardli/dev/FF-Careers-Web/index.html /Users/richardli/dev/FF-Careers-Landing/)",
+      "Bash(cp /Users/richardli/dev/FF-Careers-Web/style.css /Users/richardli/dev/FF-Careers-Landing/)",
+      "Bash(cp /Users/richardli/dev/FF-Careers-Web/ffcareersfavicon.svg /Users/richardli/dev/FF-Careers-Landing/)",
+      "Bash(cp /Users/richardli/dev/FF-Careers-Web/logo.png /Users/richardli/dev/FF-Careers-Landing/)"
+    ],
+    "additionalDirectories": [
+      "/Users/richardli/.ssh",
+      "/Users/richardli/dev/FF-Careers-Web"
+    ]
+  }
+}

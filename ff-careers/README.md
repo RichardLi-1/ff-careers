@@ -1,6 +1,29 @@
-# Welcome to your Expo app 👋
+# FF Careers — React Native / Expo
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+
+## Deployment (Vercel)
+
+Build the web export and push to production in one shot:
+
+From the repo root:
+
+```bash
+npm --prefix ff-careers run export && vercel --prod
+```
+
+Or from inside `ff-careers/`:
+
+```bash
+npm run export && vercel --prod
+```
+
+- `npm run export` — runs `expo export --platform web`, compiling the app to `dist/` (the output Vercel expects per `vercel.json`)
+- `vercel --prod` — deploys that `dist/` to production at `ffcareers.app`
+
+Requires the Vercel CLI (`npm i -g vercel`) and an active `vercel login` session.
+
+---
 
 ## Get started
 
