@@ -48,11 +48,11 @@ interface ChatMessage {
 // TODO: Replace with real API calls to /careers/me and /insights/me
 
 const INSIGHT_CARDS: InsightCardData[] = [
-  { id: '1', icon: '✨', label: 'Top Match', value: 'Product Manager', bg: '#efeafc' },
-  { id: '2', icon: '📈', label: 'Rising Field', value: 'AI/ML Engineer', bg: '#e8f5e9' },
-  { id: '3', icon: '🎯', label: 'Skills Ready', value: '4 careers', bg: '#fff8e1' },
-  { id: '4', icon: '📚', label: 'Learn Next', value: 'SQL Basics', bg: '#e3f2fd' },
-  { id: '5', icon: '💼', label: 'Active Openings', value: '2,340 roles', bg: '#fce4ec' },
+  { id: '1', icon: '✨', label: 'Top Match', value: 'Product Manager', bg: '#ffffff' },
+  { id: '2', icon: '📈', label: 'Rising Field', value: 'AI/ML Engineer', bg: '#ffffff' },
+  { id: '3', icon: '🎯', label: 'Skills Ready', value: '4 careers', bg: '#ffffff' },
+  { id: '4', icon: '📚', label: 'Learn Next', value: 'SQL Basics', bg: '#ffffff' },
+  { id: '5', icon: '💼', label: 'Active Openings', value: '2,340 roles', bg: '#ffffff' },
 ];
 
 const MOCK_CAREERS: Career[] = [
@@ -110,8 +110,8 @@ const MOCK_CAREERS: Career[] = [
 
 function matchColor(score: number) {
   if (score >= 80) return '#27ae60';
-  if (score >= 60) return '#f39c12';
-  return '#e74c3c';
+  if (score >= 60) return '#e8a020';
+  return '#cc4444';
 }
 
 function matchLabel(score: number) {
@@ -135,10 +135,17 @@ function InsightCard({ card }: { card: InsightCardData }) {
 const insightStyles = StyleSheet.create({
   card: {
     width: 136,
-    borderRadius: 18,
+    borderRadius: 16,
     padding: 16,
     marginRight: 10,
     gap: 5,
+    borderWidth: 1,
+    borderColor: '#e8e8e8',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 6,
+    elevation: 2,
   },
   icon: { fontSize: 24 },
   label: {
@@ -159,8 +166,8 @@ const insightStyles = StyleSheet.create({
 // ─── Skill Chip ────────────────────────────────────────────────────────────────
 
 function Chip({ label, variant }: { label: string; variant: 'matched' | 'learn' }) {
-  const bg = variant === 'matched' ? '#e8f5e9' : AppColors.accentSoft;
-  const color = variant === 'matched' ? '#27ae60' : '#7c3aed';
+  const bg = variant === 'matched' ? '#e8f5e9' : '#f0f0f0';
+  const color = variant === 'matched' ? '#27ae60' : '#666666';
   return (
     <View style={[chipStyles.chip, { backgroundColor: bg }]}>
       <Text style={[chipStyles.text, { color }]}>{label}</Text>
@@ -296,14 +303,14 @@ const detailStyles = StyleSheet.create({
   headerLeft: { flex: 1, gap: 6 },
   industryPill: {
     alignSelf: 'flex-start',
-    backgroundColor: AppColors.accentSoft,
+    backgroundColor: '#f0f0f0',
     borderRadius: 20,
     paddingHorizontal: 10,
     paddingVertical: 3,
   },
   industryText: {
     fontSize: 11,
-    color: '#7c3aed',
+    color: '#666666',
     fontFamily: AppFonts.bold,
     textTransform: 'uppercase',
     letterSpacing: 0.6,
@@ -366,7 +373,7 @@ const detailStyles = StyleSheet.create({
     fontFamily: AppFonts.regular,
   },
   aiCard: {
-    backgroundColor: AppColors.accentSoft,
+    backgroundColor: '#e8f5e9',
     borderRadius: 16,
     padding: 16,
     gap: 8,
@@ -374,7 +381,7 @@ const detailStyles = StyleSheet.create({
   },
   aiLabel: {
     fontSize: 12,
-    color: '#7c3aed',
+    color: '#27ae60',
     fontFamily: AppFonts.bold,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
@@ -410,7 +417,7 @@ const detailStyles = StyleSheet.create({
     marginBottom: 16,
   },
   chatBtn: {
-    backgroundColor: '#7c3aed',
+    backgroundColor: '#1a1a1a',
     borderRadius: 14,
     padding: 16,
     alignItems: 'center',
@@ -705,8 +712,8 @@ function CareerCard({ career, onPress }: { career: Career; onPress: () => void }
           <Text style={cardStyles.cardTitle}>{career.title}</Text>
           <Text style={cardStyles.cardIndustry}>{career.industry}</Text>
         </View>
-        <View style={[cardStyles.scoreTag, { backgroundColor: color + '1a', borderColor: color + '44' }]}>
-          <Text style={[cardStyles.scoreTagText, { color }]}>{career.matchScore}%</Text>
+        <View style={[cardStyles.scoreTag, { backgroundColor: color }]}>
+          <Text style={cardStyles.scoreTagText}>{career.matchScore}%</Text>
         </View>
       </View>
       <Text style={cardStyles.cardDesc}>{career.description}</Text>
@@ -753,12 +760,12 @@ const cardStyles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 5,
     borderRadius: 20,
-    borderWidth: 1,
     alignSelf: 'flex-start',
   },
   scoreTagText: {
     fontSize: 14,
     fontFamily: AppFonts.bold,
+    color: '#ffffff',
   },
   cardDesc: {
     fontSize: 14,
