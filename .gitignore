@@ -7,3 +7,6 @@ ffcareers-key.pem
 backend/commands.txt
 ff-careers-firebase-adminsdk-fbsvc-389dbd447c.json
 /node_modules
+VERCEL_COMMANDS.md
+.vercel
+.env*.local

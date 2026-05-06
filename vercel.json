@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd ff-careers && npm install && npx expo export --platform web",
+  "outputDirectory": "ff-careers/dist",
+  "cleanUrls": true
+}
