@@ -13,7 +13,7 @@ import {
   View,
 } from 'react-native';
 import AppHeader from '@/components/AppHeader';
-import { AppColors, AppFonts } from '@/constants/theme';
+import { AppColors, AppFonts, Fonts } from '@/constants/theme';
 import { sendChatMessage } from '@/services/api';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -44,67 +44,11 @@ interface ChatMessage {
   content: string;
 }
 
-// ─── Mock Data ─────────────────────────────────────────────────────────────────
+// ─── Data ──────────────────────────────────────────────────────────────────────
 // TODO: Replace with real API calls to /careers/me and /insights/me
 
-const INSIGHT_CARDS: InsightCardData[] = [
-  { id: '1', icon: '✨', label: 'Top Match', value: 'Product Manager', bg: '#ffffff' },
-  { id: '2', icon: '📈', label: 'Rising Field', value: 'AI/ML Engineer', bg: '#ffffff' },
-  { id: '3', icon: '🎯', label: 'Skills Ready', value: '4 careers', bg: '#ffffff' },
-  { id: '4', icon: '📚', label: 'Learn Next', value: 'SQL Basics', bg: '#ffffff' },
-  { id: '5', icon: '💼', label: 'Active Openings', value: '2,340 roles', bg: '#ffffff' },
-];
-
-const MOCK_CAREERS: Career[] = [
-  {
-    id: '1',
-    title: 'Product Manager',
-    industry: 'Technology',
-    description: 'Lead cross-functional teams to define and ship products users love.',
-    matchScore: 91,
-    matchedSkills: ['Communication', 'Strategy', 'Data Analysis'],
-    skillsToLearn: ['SQL', 'A/B Testing', 'Roadmapping Tools'],
-    aiSummary:
-      'Your background in communication and strategic thinking aligns strongly with PM work. Your experience leading projects gives you a foundation most entry-level candidates lack.',
-    avgSalary: '$115k – $145k',
-  },
-  {
-    id: '2',
-    title: 'UX Researcher',
-    industry: 'Design',
-    description: 'Uncover how real people think and behave to guide product decisions.',
-    matchScore: 78,
-    matchedSkills: ['Critical Thinking', 'Interviewing', 'Writing'],
-    skillsToLearn: ['Figma', 'Qualtrics', 'Usability Testing'],
-    aiSummary:
-      'Your analytical mindset and interpersonal skills map well to UX Research. A few targeted projects in usability testing would make your profile very competitive.',
-    avgSalary: '$90k – $120k',
-  },
-  {
-    id: '3',
-    title: 'Data Analyst',
-    industry: 'Analytics',
-    description: 'Turn raw data into insights that drive business decisions.',
-    matchScore: 65,
-    matchedSkills: ['Problem Solving', 'Excel', 'Attention to Detail'],
-    skillsToLearn: ['Python', 'SQL', 'Tableau', 'Statistics'],
-    aiSummary:
-      'You have the core analytical instincts for this role. Adding SQL and a data visualization tool to your skillset would significantly boost your match score.',
-    avgSalary: '$75k – $110k',
-  },
-  {
-    id: '4',
-    title: 'Marketing Manager',
-    industry: 'Marketing',
-    description: 'Drive growth through campaigns, content, and brand strategy.',
-    matchScore: 82,
-    matchedSkills: ['Creativity', 'Content Writing', 'Social Media'],
-    skillsToLearn: ['Google Analytics', 'Paid Ads', 'Email Automation'],
-    aiSummary:
-      'Your creative and communication skills are a strong foundation. Gaining hands-on experience with marketing analytics tools will elevate your candidacy.',
-    avgSalary: '$80k – $125k',
-  },
-];
+const INSIGHT_CARDS: InsightCardData[] = [];
+const MOCK_CAREERS: Career[] = [];
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -119,6 +63,78 @@ function matchLabel(score: number) {
   if (score >= 60) return 'Good Match';
   return 'Developing Match';
 }
+
+// ─── Empty State ───────────────────────────────────────────────────────────────
+
+const SERIF = Fonts?.serif ?? 'serif';
+
+function EmptyState() {
+  return (
+    <View style={emptyStyles.container}>
+      <View style={emptyStyles.glyphWrap}>
+        <Text style={emptyStyles.glyph}>◊</Text>
+      </View>
+      <Text style={emptyStyles.headline}>Your library awaits</Text>
+      <Text style={emptyStyles.body}>
+        Keep using FF Careers — your matched careers and personalized insights will appear here as you build your profile.
+      </Text>
+      <View style={emptyStyles.divider} />
+      <Text style={emptyStyles.hint}>Complete your profile to get started</Text>
+    </View>
+  );
+}
+
+const emptyStyles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 32,
+  },
+  glyphWrap: {
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    backgroundColor: '#f0f0f0',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+  },
+  glyph: {
+    fontSize: 44,
+    color: '#c8c8c8',
+    lineHeight: 52,
+    fontFamily: SERIF,
+  },
+  headline: {
+    fontSize: 22,
+    color: AppColors.textSecondary,
+    fontFamily: SERIF,
+    textAlign: 'center',
+    marginBottom: 10,
+    letterSpacing: 0.2,
+  },
+  body: {
+    fontSize: 14,
+    color: AppColors.textMuted,
+    fontFamily: AppFonts.regular,
+    textAlign: 'center',
+    lineHeight: 21,
+    maxWidth: 270,
+  },
+  divider: {
+    width: 32,
+    height: 1,
+    backgroundColor: '#e0e0e0',
+    marginVertical: 20,
+  },
+  hint: {
+    fontSize: 12,
+    color: '#c0c0c0',
+    fontFamily: AppFonts.bold,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+});
 
 // ─── Insight Card ──────────────────────────────────────────────────────────────
 
@@ -808,36 +824,42 @@ export default function LibraryScreen() {
       <AppHeader />
 
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
-        {/* Page Header */}
-        <Text style={styles.eyebrow}>Career Library</Text>
-        <Text style={styles.title}>Your personalized career map</Text>
-        <Text style={styles.description}>
-          AI-matched careers based on your skills, tasks, and goals. Tap any card to explore your fit.
-        </Text>
+        {INSIGHT_CARDS.length === 0 && MOCK_CAREERS.length === 0 ? (
+          <EmptyState />
+        ) : (
+          <>
+            {/* Page Header */}
+            <Text style={styles.eyebrow}>Career Library</Text>
+            <Text style={styles.title}>Your personalized career map</Text>
+            <Text style={styles.description}>
+              AI-matched careers based on your skills, tasks, and goals. Tap any card to explore your fit.
+            </Text>
 
-        {/* Insight Cards */}
-        <Text style={styles.sectionLabel}>Insights</Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.insightScroll}
-        >
-          {INSIGHT_CARDS.map((card) => (
-            <InsightCard key={card.id} card={card} />
-          ))}
-        </ScrollView>
+            {/* Insight Cards */}
+            <Text style={styles.sectionLabel}>Insights</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.insightScroll}
+            >
+              {INSIGHT_CARDS.map((card) => (
+                <InsightCard key={card.id} card={card} />
+              ))}
+            </ScrollView>
 
-        {/* Career Matches */}
-        <Text style={styles.sectionLabel}>Career Matches</Text>
-        <View style={styles.cardList}>
-          {MOCK_CAREERS.map((career) => (
-            <CareerCard
-              key={career.id}
-              career={career}
-              onPress={() => setSelectedCareer(career)}
-            />
-          ))}
-        </View>
+            {/* Career Matches */}
+            <Text style={styles.sectionLabel}>Career Matches</Text>
+            <View style={styles.cardList}>
+              {MOCK_CAREERS.map((career) => (
+                <CareerCard
+                  key={career.id}
+                  career={career}
+                  onPress={() => setSelectedCareer(career)}
+                />
+              ))}
+            </View>
+          </>
+        )}
 
         {/* Bottom spacer so FAB doesn't overlap last card */}
         <View style={{ height: 80 }} />
