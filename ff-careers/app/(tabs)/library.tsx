@@ -79,7 +79,7 @@ function EmptyState() {
         Keep using FF Careers — your matched careers and personalized insights will appear here as you build your profile.
       </Text>
       <View style={emptyStyles.divider} />
-      <Text style={emptyStyles.hint}>Complete your profile to get started</Text>
+      <Text style={emptyStyles.hint}>Keep using FFCareers to get started</Text>
     </View>
   );
 }

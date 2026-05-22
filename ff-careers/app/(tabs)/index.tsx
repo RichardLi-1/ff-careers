@@ -111,13 +111,17 @@ export default function TodoScreen() {
           <View style={[styles.taskContainer, isMobile && styles.taskContainerMobile]}>
             <Text style={styles.sectionTitle}>{LISTS[selectedList]}</Text>
 
+            {error && !loading && tasks.length > 0 && (
+              <Text style={styles.stateTextError}>{error}</Text>
+            )}
+
             <ScrollView
               contentContainerStyle={styles.taskList}
               showsVerticalScrollIndicator={false}>
               {loading ? (
                 <Text style={styles.stateText}>Loading tasks...</Text>
-              ) : error ? (
-                <Text style={styles.stateTextError}>Couldn't load tasks. Check your connection and try again.</Text>
+              ) : tasks.length === 0 && error ? (
+                <Text style={styles.stateTextError}>{error}</Text>
               ) : tasks.length === 0 ? (
                 <Text style={styles.stateText}>No tasks yet — add one below.</Text>
               ) : (
