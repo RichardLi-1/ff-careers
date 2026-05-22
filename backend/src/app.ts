@@ -2,10 +2,12 @@
 
 import express, { Express } from 'express';
 import cors from 'cors';
-import 'dotenv/config';
 
 const app: Express = express();
-app.use(cors({ origin: 'http://localhost:8081' }));
+const corsOrigin = process.env.CORS_ORIGIN
+if (corsOrigin) {
+    app.use(cors({ origin: corsOrigin}));
+}
 app.use(express.json());
 
 const { Pool } = require('pg');
