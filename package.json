@@ -2,6 +2,7 @@
     "name": "ff-careers-root",
     "private": true,
     "scripts": {
+        "dev": "npm --prefix backend run dev & npm --prefix ff-careers run web",
         "backend": "npm --prefix backend run dev",
         "app": "npm --prefix ff-careers run start",
         "ios": "npm --prefix ff-careers run ios",

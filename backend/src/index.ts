@@ -1,7 +1,7 @@
+import 'dotenv/config';
 import app from './app';
 import './routes/tasks';
 import './routes/users';
-import 'dotenv/config';
 //rest apis—what things exist in my system?
 //users
 //jobs
