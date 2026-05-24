@@ -1,6 +1,6 @@
 import { auth } from '@/services/firebase';
 
-const BASE = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://www.ffcareers.app';
+const BASE = process.env.NODE_ENV === "development" ? 'http://localhost:3000' : 'https://ff-careers.fly.dev';
 console.log('API BASE:', BASE, 'NODE_ENV:', process.env.NODE_ENV);
 
 export type Task = {
