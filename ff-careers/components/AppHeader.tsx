@@ -1,3 +1,4 @@
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { BlurView } from 'expo-blur';
 import { usePathname, useRouter } from 'expo-router';
 import { useMemo, useState } from 'react';
@@ -83,6 +84,7 @@ export default function AppHeader() {
               </View>
               <View style={styles.divider} />
               <Pressable style={styles.menuItem} onPress={handleLogout}>
+                <MaterialIcons name="power-settings-new" size={18} color={AppColors.textSecondary} />
                 <Text style={styles.menuItemText}>Log Out</Text>
               </Pressable>
             </View>
@@ -246,6 +248,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
   },
   menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
     padding: 10,
     borderRadius: 8,
   },

@@ -10,6 +10,8 @@
         "web": "npm --prefix ff-careers run web",
         "lint": "npm --prefix ff-careers run lint",
         "install:backend": "npm --prefix backend install",
-        "install:app": "npm --prefix ff-careers install"
+        "install:app": "npm --prefix ff-careers install",
+        "deploy": "./scripts/deploy-web.sh",
+        "deploy:preview": "./scripts/deploy-web.sh --preview"
     }
 }
